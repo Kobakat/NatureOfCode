@@ -30,7 +30,6 @@ public class Ecosystem : MonoBehaviour
     void CreateCreature(System.Type type)
     {
         GameObject creature = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        creature.AddComponent<Rigidbody>();
         Creature component = (Creature)creature.AddComponent(type);
         creatures.Add(component);
         
@@ -44,7 +43,6 @@ public class Ecosystem : MonoBehaviour
     void CreateResource(System.Type type)
     {
         GameObject resource = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        resource.GetComponent<Collider>().enabled = false;
         IResource component = (IResource)resource.AddComponent(type);
         resources.Add(component);
 

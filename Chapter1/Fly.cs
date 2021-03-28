@@ -6,6 +6,7 @@ public class Fly : Creature
 {
     public float speed = 1;
     public float intelligence = .5f;
+    public float maxSpeed = 1;
 
     List<Food> foods;
     Food targetFood;
@@ -17,10 +18,10 @@ public class Fly : Creature
         FindAllFood();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         FindNearestPieceOfFood();
-        SelectMoveType();
+        MoveFly();
 
         Debug.DrawLine(transform.position, targetFood.transform.position, Color.red);
     }
@@ -61,7 +62,7 @@ public class Fly : Creature
     /// <summary>
     /// Determine if the fly should move randomly or towards the nearest piece of food
     /// </summary>
-    void SelectMoveType()
+    void MoveFly()
     {
         float selection = Random.Range(0f, 1f);
 
@@ -71,6 +72,10 @@ public class Fly : Creature
         else
             MoveTowardsNearestPieceOfFood();
 
+        velocity += acceleration;
+        velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+
+        transform.position += velocity * Time.deltaTime;
     }
 
     void MoveTowardsNearestPieceOfFood()
@@ -78,7 +83,7 @@ public class Fly : Creature
         Vector3 directionalVector = targetFood.transform.position - this.transform.position;
         directionalVector.Normalize();
 
-        body.AddForce(directionalVector * speed, ForceMode.Acceleration);
+        acceleration = directionalVector * speed * Time.deltaTime;
     }
 
     void MoveRandomly()
@@ -90,7 +95,7 @@ public class Fly : Creature
 
         randomVector.Normalize();
 
-        body.AddForce(randomVector * speed, ForceMode.Acceleration);
+        acceleration = randomVector * speed * Time.deltaTime;
     }
 
     
